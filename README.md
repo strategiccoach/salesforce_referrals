@@ -2,8 +2,6 @@
 
 ## Installation
 
-Requires ActiveJob and ActionMailer. If the gems aren't present listed by default, add to Gemfile.
-
 Requires that the mail connector is configured.
 
 Requires the following parameters to be configured as environmental variables. Speak to your Salesforce admin to be provided this values. Do not store the actual parameters in the code. Refer to them via the ENV.
