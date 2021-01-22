@@ -7,7 +7,7 @@ class SalesforceReferrals ; VERSION= '0.0.1'
   }
   EMAIL_REGEX = /^([\w\.%\+\-]+)@([\w\-]+\.)+([\w]{2,})$/i
 
-  attr_reader: :form_errors, :form_vars, :status_code
+  attr_reader :form_errors, :form_vars, :status_code
 
   def initialize(args)
     @status_code = 200
