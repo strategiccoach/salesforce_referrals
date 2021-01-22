@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'salesforce_referrals'
-  s.version     = SalesforceReferrals::VERSION
+  s.version     = '0.0.1'
   s.date        = '2021-01-20'
   s.summary     = "Salesforce Referrals Integration"
   s.description = "Push incoming referrals to a Salesforce API endpoint for automated integration"
