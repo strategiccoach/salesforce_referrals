@@ -30,6 +30,7 @@ class SalesforceReferrals ; VERSION= '0.0.1'
       return
     end
     auth_params = logging_in
+    is_ent = @form_vars['referral_is_entrepreneur'].eql?(true) ? "Yes" : "No"
     data = {
       source: ENV['SERVICE_IDENTIFIER'],
       parent_id: @form_vars['parent_id'],
@@ -41,7 +42,7 @@ class SalesforceReferrals ; VERSION= '0.0.1'
         last_name: @form_vars['referral_last_name'],
         phone: @form_vars['referral_phone'],
         email: @form_vars['referral_email'].to_s.downcase,
-        entrepreneur: @form_vars['referral_is_entrepreneur'].eql?(true) ? "Yes" : "No" rescue "No",
+        entrepreneur: is_ent,
         kp: @form_vars['referral_kp_title'],
         description: @form_var['description']
       }
