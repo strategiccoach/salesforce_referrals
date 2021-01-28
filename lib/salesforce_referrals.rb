@@ -3,7 +3,7 @@ class SalesforceReferrals ; VERSION= '0.0.1'
   VARS = { referrer_first_name: '', referrer_last_name: '', referrer_email: '', salesforce_id: '',
     referral_first_name: '', referral_last_name: '', 
     referral_email: '',  referral_phone:  '',
-    referral_kp_title: '', referral_is_entrepreneur: false
+    referral_kp_title: '', referral_is_entrepreneur: 'No'
   }
   EMAIL_REGEX = /^([\w\.%\+\-]+)@([\w\-]+\.)+([\w]{2,})$/i
 
@@ -32,17 +32,18 @@ class SalesforceReferrals ; VERSION= '0.0.1'
     auth_params = logging_in
     data = {
       source: ENV['SERVICE_IDENTIFIER'],
-      referrer_id: @form_vars['salesforce_id'],
-      referrer_first_name: @form_vars['referrer_first_name'],
-      referrer_last_name: @form_vars['referrer_last_name'],
-      referrer_email: @form_vars['referrer_email'],
+      parent_id: @form_vars['parent_id'],
       form_data: {
-        referral_first_name: @form_vars['referral_first_name'],
-        referral_last_name: @form_vars['referral_last_name'],
-        referral_phone: @form_vars['referral_phone'],
-        referral_email: @form_vars['referral_email'].to_s.downcase,
-        referral_is_entrepreneur: @form_vars['referral_is_entrepreneur'],
-        referral_kp_title: @form_vars['referral_kp_title'],
+        # referrer
+        client_name: @form_vars['client_name'],
+        client_email: @form_vars['client_email'],
+        first_name: @form_vars['referral_first_name'],
+        last_name: @form_vars['referral_last_name'],
+        phone: @form_vars['referral_phone'],
+        email: @form_vars['referral_email'].to_s.downcase,
+        entrepreneur: @form_vars['referral_is_entrepreneur'].eql?(true) ? "Yes" : "No" rescue "No",
+        kp: @form_vars['referral_kp_title'],
+        description: @form_var['description']
       }
     }
 
@@ -84,7 +85,7 @@ class SalesforceReferrals ; VERSION= '0.0.1'
         
       end
     end
-    if @status_code.eql?(200)
+    if @status_code.eql?(200) && ENV['SEND_REFERRAL_EMAIL'].to_i.eql?(1)
       SendReferralsMailer.submission(@form_vars).deliver_now
     else
       SalesForceReferralErrorMailer.errors(@form_errors, @form_vars).deliver_now
