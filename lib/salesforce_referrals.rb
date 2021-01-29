@@ -1,36 +1,39 @@
 class SalesforceReferrals ; VERSION= '0.0.1'
 
-  VARS = { referrer_first_name: '', referrer_last_name: '', referrer_email: '', salesforce_id: '',
-    referral_first_name: '', referral_last_name: '', 
-    referral_email: '',  referral_phone:  '',
-    referral_kp_title: '', referral_is_entrepreneur: 'No'
-  }
   EMAIL_REGEX = /^([\w\.%\+\-]+)@([\w\-]+\.)+([\w]{2,})$/i
 
   attr_reader :form_errors, :form_vars, :status_code
 
-  def initialize(args)
+  def initialize(form_vars)
     @status_code = 200
-    @form_vars = VARS.merge(args.delete_if { |_,v| v.nil? || v == '' })
+    @form_vars = form_vars
     @form_errors = []
     # validate information. 
-    if !EMAIL_REGEX.match(@form_vars[:referrer_email])
+    if !EMAIL_REGEX.match(@form_vars['client_email'])
       @status_code = 600
-      @form_errors << "Please ensure your email is correct."
+      @form_errors << "Please ensure your email is correct... #{@form_vars['client_email']}"
     end
-    if !EMAIL_REGEX.match(@form_vars[:referral_email])
+    if !EMAIL_REGEX.match(@form_vars['referral_email'])
       @status_code = 600
-      @form_errors << "Please ensure your referral's email is correct."
+      @form_errors << "Please ensure your referral's email is correct./. #{@form_vars['referral_email']}"
     end
   end
 
-  def perform
+  def perform(status = 1)
     # catch if email validation somehow gets ignored
     if not @status_code.eql?(200)
       return
     end
     auth_params = logging_in
+    Rails.logger.info "?? #{auth_params}"
+    if not auth_params['instance_url'].present?
+      @form_errors << "Login Problem. Not able to connect to the Salesforce Server. Aborting."
+      @status_code = 600
+      send_error_report
+      return false
+    end
     is_ent = @form_vars['referral_is_entrepreneur'].eql?(true) ? "Yes" : "No"
+    Rails.logger.info "Form Vars: #{ @form_vars}"
     data = {
       source: ENV['SERVICE_IDENTIFIER'],
       parent_id: @form_vars['parent_id'],
@@ -41,15 +44,16 @@ class SalesforceReferrals ; VERSION= '0.0.1'
         first_name: @form_vars['referral_first_name'],
         last_name: @form_vars['referral_last_name'],
         phone: @form_vars['referral_phone'],
-        email: @form_vars['referral_email'].to_s.downcase,
+        email: @form_vars['referral_email'].downcase,
         entrepreneur: is_ent,
         kp: @form_vars['referral_kp_title'],
         description: @form_var['description']
       }
     }
-
+    Rails.logger.info "DATA: #{data}"
     # Alpha may change with refreshes. use instance url
     api_url = "#{auth_params['instance_url']}/services/apexrest/NewContact"
+    Rails.logger.info "AUTH: #{api_url}"
     uri = URI.parse(api_url)
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
@@ -62,6 +66,8 @@ class SalesforceReferrals ; VERSION= '0.0.1'
     
     response = http.request(request)
     results = JSON.parse(response.body) rescue {}
+
+    @form_errors = []
 
     if results['status'].blank?
       @form_errors << "FATAL Exception"
@@ -89,8 +95,12 @@ class SalesforceReferrals ; VERSION= '0.0.1'
     if @status_code.eql?(200) && ENV['SEND_REFERRAL_EMAIL'].to_i.eql?(1)
       SendReferralsMailer.submission(@form_vars).deliver_now
     else
-      SalesForceReferralErrorMailer.errors(@form_errors, @form_vars).deliver_now
+      send_error_report
     end
+  end
+
+  def send_error_report
+    SalesforceReferralErrorMailer.errors(@form_errors, @form_vars).deliver_now
   end
 
   # login to salesforce using OAuth2
