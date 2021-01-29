@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.description = "Push incoming referrals to a Salesforce API endpoint for automated integration"
   s.authors     = ["Paul Devisser"]
   s.email       = 'paul.devisser@strategiccoach.com'
-  s.files       = `git ls-files -z`.split("\x0").select{|f| f.start_with?('app',  'lib', 'saleseforce_referrals.gemspec', 'LICENSE', 'README') }
+  s.files       = `git ls-files -z`.split("\x0").select{|f| f.start_with?('lib', 'saleseforce_referrals.gemspec', 'LICENSE', 'README') }
   s.homepage    = ''
   s.license     = 'MIT'
 end
