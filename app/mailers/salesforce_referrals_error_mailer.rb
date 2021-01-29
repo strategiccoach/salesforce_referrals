@@ -1,4 +1,4 @@
-class SalesForceReferralErrorMailer < ActionMailer::Base
+class SalesforceReferralErrorMailer < ActionMailer::Base
   layout false
   default :from => "clintsite@strategiccoach.com", :content_type => "text/html"
   
