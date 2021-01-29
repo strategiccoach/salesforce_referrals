@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Error Notification</title>
+    <%= stylesheet_link_tag 'email.css' %>
+
+    <!--[if gte mso 9]>
+      <xml>
+         <o:OfficeDocumentSettings>
+          <o:AllowPNG/>
+          <o:PixelsPerInch>96</o:PixelsPerInch>
+         </o:OfficeDocumentSettings>
+      </xml>
+    <![endif]-->
+  </head>
+  <body>
+    <table border="0" cellpadding="0" cellspacing="0" class="body">
+      <tr>
+        <td>&nbsp;</td>
+        <td class="container">
+          <div class="content">
+
+            <!-- START CENTERED WHITE CONTAINER -->
+            <span class="preheader">
+              <%= yield :preheader_text %>
+            </span>
+            <div class="header">
+              <table border="0" cellpadding="0" cellspacing="0">
+                <tbody><tr>
+                  <td class="align-center">
+                    <a href="https://www.strategiccoach.com" target="_blank">
+                      <%= image_tag attachments["sc-logo.png"].url, size: '65', align: 'center' %>
+                    </a>
+                  </td>
+                </tr>
+              </tbody></table>
+            </div>
+            <table class="main">
+              <!-- START MAIN CONTENT AREA -->
+              <h1>Error Notification</h1>
+              <h5></h5>
+              <pre><%= @error.join("\n") %></pre>
+              <br /><br />
+              <pre><%= @vars.each { |k,v| echo "#{k}: #{v}\n" } %></pre>
+              <!-- END MAIN CONTENT AREA -->
+              </table>
+
+            <!-- START FOOTER -->
+            <div class="footer">
+              <table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td class="content-block">
+                    <span class="apple-link"><%= link_to "The Strategic Coach Inc.", 'https://www.strategiccoach.com' %>, 33 Fraser Avenue, Suite 201, Toronto, ON, Canada</span>
+                    
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+            <!-- END FOOTER -->
+            
+<!-- END CENTERED WHITE CONTAINER --></div>
+        </td>
+        <td>&nbsp;</td>
+      </tr>
+    </table>
+  </body>
+</html>
+
