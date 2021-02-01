@@ -6,12 +6,12 @@ Gem::Specification.new do |s|
   s.description = "Push incoming referrals to a Salesforce API endpoint for automated integration"
   s.authors     = ["Paul Devisser"]
   s.email       = 'paul.devisser@strategiccoach.com'
-  s.files       = ['saleseforce_referrals.gemspec', 'README.md', 
+  s.files       = ['salesforce_referrals.gemspec', 'README.md', 
   'lib/salesforce_referrals.rb', 
   'lib/salesforce_referrals/salesforce_referrals.rb', 
   'lib/salesforce_referrals/salesforce_referrals_mailer.rb',
-  'lib/salesforce_referrals/mailer/errors.html.erb',
-  'lib/salesforce_referrals/mailer/submission.html.erb'
+  'mailer/errors.html.erb',
+  'mailer/submission.html.erb'
     ]
   s.homepage    = ''
   s.license     = 'MIT'
