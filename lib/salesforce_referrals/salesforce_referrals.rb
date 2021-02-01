@@ -51,32 +51,34 @@ class SalesforceReferrals ; VERSION= '0.0.1'
       return
     end
     auth_params = logging_in
-    Rails.logger.info "?? #{auth_params}"
+    Rails.logger.info "\n\nAUTH_PARAMS: #{auth_params}\n\n"
     if not auth_params['instance_url'].present?
       @form_errors << "Login Problem. Not able to connect to the Salesforce Server. Aborting."
       @status_code = 600
       send_error_report
       return false
     end
+    puts @form_vars.inspect
     is_ent = @form_vars['referral_is_entrepreneur'].eql?(true) ? "Yes" : "No"
-    Rails.logger.info "Form Vars: #{ @form_vars}"
+    @form_vars['source'] =  ENV['SERVICE_IDENTIFIER']
+
     data = {
-      source: ENV['SERVICE_IDENTIFIER'],
+      source: @form_vars['source'],
       parent_id: @form_vars['parent_id'],
       form_data: {
         # referrer
         client_name: @form_vars['client_name'],
-        client_email: @form_vars['client_email'],
+        client_email: @form_vars['client_email'].to_s.downcase,
         first_name: @form_vars['referral_first_name'],
         last_name: @form_vars['referral_last_name'],
         phone: @form_vars['referral_phone'],
-        email: @form_vars['referral_email'].downcase,
+        email: @form_vars['referral_email'].to_s.downcase,
         entrepreneur: is_ent,
         kp: @form_vars['referral_kp_title'],
-        description: @form_var['description']
+        description: @form_vars['description']
       }
     }
-    Rails.logger.info "DATA: #{data}"
+    Rails.logger.info "DATA: #{auth_params}"
     # Alpha may change with refreshes. use instance url
     api_url = "#{auth_params['instance_url']}/services/apexrest/NewContact"
     Rails.logger.info "AUTH: #{api_url}"
@@ -126,9 +128,7 @@ class SalesforceReferrals ; VERSION= '0.0.1'
   end
 
   def send_error_report
-    Rails.logger.info "MAILER? #{self.mailer}"
-    # self.mailer.errors(@form_errors, @form_vars).deliver_now
-    SalesforceReferrals::Mailer.errors(@form_errors, @form_vars).deliver_now
+    SalesforceReferralsMailer.errors(@form_errors, @form_vars).deliver_now
   end
 
   # login to salesforce using OAuth2
