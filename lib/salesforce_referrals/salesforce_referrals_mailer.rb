@@ -1,5 +1,6 @@
 if defined?(ActionMailer)
   class SalesforceReferralsMailer < ActionMailer::Base
+    default from: 'Strategic Coach <webmaster@strategiccoach.com>'
     layout false
   
     def submission(referral)
