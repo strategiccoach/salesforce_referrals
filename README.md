@@ -13,13 +13,18 @@ SF_USER
 SF_PASS
 SERVICE_IDENTIFIER
 
+Copy the views from lib/salesforce_referral_mailer to app/vews
+
+Switch the processing of user data to SalesforceReferral.new(params)
+
 ## Website referral form
 
 For the referrer
 
-first_name, last_name, email_address, salesforce_id (optional)
+client_name, client_email, parent_id (the salesforce id)
 
 For the referral
 
-first_name, last_name, email_address, phone_number, is_ent, kp_title (optional)
+referral_first_name, referral_last_name, referral_phone, referral_email, referral_is_entrepreneur (as true / false), referral_company, referral_kp_title, description
 
+The process will transform them to the format / parameters expected by the webservice
