@@ -60,7 +60,7 @@ class SalesforceReferrals ; VERSION= '0.0.1'
     end
     puts @form_vars.inspect
     is_ent = @form_vars['referral_is_entrepreneur'].eql?(true) ? "Yes" : "No"
-    @form_vars['source'] =  ENV['SERVICE_IDENTIFIER']
+    @form_vars['source'] =  ENV['SERVICE_IDENTIFIER'] if @form_vars['source'].blank?
 
     data = {
       source: @form_vars['source'],
@@ -73,6 +73,7 @@ class SalesforceReferrals ; VERSION= '0.0.1'
         last_name: @form_vars['referral_last_name'],
         phone: @form_vars['referral_phone'],
         email: @form_vars['referral_email'].to_s.downcase,
+        company: @form_vars['referral_company'],
         entrepreneur: is_ent,
         kp: @form_vars['referral_kp_title'],
         description: @form_vars['description']
