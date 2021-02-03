@@ -20,11 +20,14 @@
               <!-- START MAIN CONTENT AREA -->
               <h1>Error Notification</h1>
               <%= @error.join("<br />").html_safe %>
-              <h5>Form Values</h5>
+              <h5>Submitted By User</h5>
               <br /><br />
               <% @vars.each do |var| %>
                 <%= var[0] %>: <%= var[1] %><br />
               <% end -%>
+              <h5>Sent to Salesforce</h5>
+              <br /><br />
+              <%= @data %>
               <!-- END MAIN CONTENT AREA -->
               </table>
 <!-- END CENTERED WHITE CONTAINER --></div>

@@ -8,9 +8,10 @@ if defined?(ActionMailer)
       mail(to: "referrals@strategiccoach.com",subject: "Referral Submission",from: "clientsite@strategiccoach.com")
     end
     
-    def errors(err, vars)
+    def errors(err, vars, data)
       @error = err
       @vars =  vars
+      @data = data
       mail(to: "techlogger@strategiccoach.com",subject: "Error Reported with the SF Referral Integration")
 
       # # body = render_to_string(layout: false, template: "#{File.dirname(__FILE__)}/mailer/errors", locals: { :@error => err, @vars => vars })

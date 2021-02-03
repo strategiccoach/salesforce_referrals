@@ -124,12 +124,12 @@ class SalesforceReferrals ; VERSION= '0.0.1'
     if @status_code.eql?(200) && ENV['SEND_REFERRAL_EMAIL'].to_i.eql?(1)
       self.mailer.submission(@form_vars).deliver_now
     else
-      send_error_report
+      send_error_report(data)
     end
   end
 
-  def send_error_report
-    SalesforceReferralsMailer.errors(@form_errors, @form_vars).deliver_now
+  def send_error_report(data = {})
+    SalesforceReferralsMailer.errors(@form_errors, @form_vars, data).deliver_now
   end
 
   # login to salesforce using OAuth2
