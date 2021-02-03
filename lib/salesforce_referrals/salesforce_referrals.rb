@@ -19,46 +19,20 @@ class SalesforceReferrals ; VERSION= '0.0.1'
     end
   end
 
-  class Getter
-    def initialize(name)
-      @name = name
-    end
-
-    def get
-      ActiveSupport::Dependencies.constantize(@name)
-    end
-  end
-
-  def self.ref(arg)
-    ActiveSupport::Dependencies.reference(arg)
-    Getter.new(arg)
-  end
-
-  # Get the mailer class from the mailer reference object.
-  def self.mailer
-    @@mailer_ref.get
-  end
-  
-  # Set the mailer reference object to access the mailer.
-  def self.mailer=(class_name)
-    @@mailer_ref = ref(class_name)
-  end
-  self.mailer = "SalesforceReferrals::Mailer"
-
   def perform(status = 1)
     # catch if email validation somehow gets ignored
     if not @status_code.eql?(200)
       return
     end
     auth_params = logging_in
-    Rails.logger.info "\n\nAUTH_PARAMS: #{auth_params}\n\n"
+
     if not auth_params['instance_url'].present?
       @form_errors << "Login Problem. Not able to connect to the Salesforce Server. Aborting."
       @status_code = 600
       send_error_report
       return false
     end
-    puts @form_vars.inspect
+
     is_ent = @form_vars['referral_is_entrepreneur'].eql?(true) ? "Yes" : "No"
 
     data = {
@@ -79,10 +53,8 @@ class SalesforceReferrals ; VERSION= '0.0.1'
         description: @form_vars['description']
       }
     }
-    Rails.logger.info "DATA: #{auth_params}"
     # Alpha may change with refreshes. use instance url
     api_url = "#{auth_params['instance_url']}/services/apexrest/NewContact"
-    Rails.logger.info "AUTH: #{api_url}"
     uri = URI.parse(api_url)
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true

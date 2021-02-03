@@ -13,17 +13,6 @@ if defined?(ActionMailer)
       @vars =  vars
       @data = data
       mail(to: "techlogger@strategiccoach.com",subject: "Error Reported with the SF Referral Integration")
-
-      # # body = render_to_string(layout: false, template: "#{File.dirname(__FILE__)}/mailer/errors", locals: { :@error => err, @vars => vars })
-      # mail(
-      #   subject: "Error Reported with the SF Referral Integration", 
-      #   to: "techlogger@strategiccoach.com", 
-      #   from: "clientsite@strategiccoach.com",
-      #   template_path:  "app/views/mailer",
-      #   # template_name: "errors",
-      #   layout: false,
-      #   content_type: "text/html"
-      # )
     end
   end
 end
