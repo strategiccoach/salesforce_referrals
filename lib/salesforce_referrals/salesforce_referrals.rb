@@ -102,7 +102,7 @@ class SalesforceReferrals ; VERSION= '0.0.1'
       @form_errors << "There was an unrecoverable error."
       @form_errors << results['description']
       @form_errors << results['exception']
-    elsif results['status'].present? && results['status'].eql?(100)
+    elsif results['status'].present? && results['status'].eql?('100')
       @status_code = 200
     else
       case results['status']
