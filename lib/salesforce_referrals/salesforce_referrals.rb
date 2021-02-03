@@ -122,7 +122,7 @@ class SalesforceReferrals ; VERSION= '0.0.1'
     end
     if @status_code.eql?(200) && ENV['SEND_REFERRAL_EMAIL'].to_i.eql?(1)
       self.mailer.submission(@form_vars).deliver_now
-    else
+    elsif not @status_code.eql?(200)
       send_error_report(data)
     end
   end
