@@ -108,7 +108,7 @@ class SalesforceReferrals ; VERSION= '0.0.1'
       case results['status']
       when '200'
         @form_errors << "Results returned from Salesforce: #{results['status']}"
-        @form_errors << "<strong>Failed</strong>"
+        @form_errors << "<strong>Failed: #{results['status']}</strong>"
         @form_errors << results['description']
       when "325"
         @form_errors << "We found a dupicate entry in our database. We cannot add them at this time. Please inform your program advisor with the correct information."
