@@ -60,10 +60,9 @@ class SalesforceReferrals ; VERSION= '0.0.1'
     end
     puts @form_vars.inspect
     is_ent = @form_vars['referral_is_entrepreneur'].eql?(true) ? "Yes" : "No"
-    @form_vars['source'] =  ENV['SERVICE_IDENTIFIER'] if @form_vars['source'].blank?
 
     data = {
-      source: @form_vars['source'],
+      source: ENV['SERVICE_IDENTIFIER'],
       parent_id: @form_vars['parent_id'],
       form_data: {
         # referrer
