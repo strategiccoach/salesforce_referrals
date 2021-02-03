@@ -73,6 +73,7 @@ class SalesforceReferrals ; VERSION= '0.0.1'
         phone: @form_vars['referral_phone'],
         email: @form_vars['referral_email'].to_s.downcase,
         company: @form_vars['referral_company'],
+        relationship: @form_vars['referral_relationship'],
         entrepreneur: is_ent,
         kp: @form_vars['referral_kp_title'],
         description: @form_vars['description']
@@ -121,7 +122,7 @@ class SalesforceReferrals ; VERSION= '0.0.1'
       end
     end
     if @status_code.eql?(200) && ENV['SEND_REFERRAL_EMAIL'].to_i.eql?(1)
-      self.mailer.submission(@form_vars).deliver_now
+      SalesforceReferralsMailer.submission(@form_vars).deliver_now
     elsif not @status_code.eql?(200)
       send_error_report(data)
     end

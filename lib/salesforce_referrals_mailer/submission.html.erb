@@ -1,0 +1,23 @@
+<h1>Referral From <%= @referral['client_name'] %> (<%= @referral['client_email'] %></h1>
+
+<p>
+First Name: <%= @referral['referral_first_name'] %><br />
+Last Name: <%= @referral['referral_last_name'] %><br />
+        Email Address: <%= @referral['referral_phone'] %><br />
+        Phone Number: <%= @referral['referral_email'] %><br />
+        Company: <%= @referral['referral_company'] %><br />
+        Is an entrepreneur: <%= @referral['referral_is_entrepreneur'].eql?(true) ? "Yes" : "No" %><br />
+        <% if @referral['referral_relationship'].present? %>
+          Relationship: <%= @referral['referral_relationship'] %><br />
+        <% end -%>
+        <% if @referral['referral_kp_title'].present? %>
+          KP Title: <%= @referral['referral_kp_title'] %><br />
+        <% end -%>
+        <% if @referral['description'].present? %>
+          Description: <%= @referral['description'] %><br />
+        <% end -%>
+</p>
+
+<p>
+  Sent via <%= ENV['SERVICE_IDENTIFIER'] %>
+</p>
