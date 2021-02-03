@@ -114,7 +114,7 @@ class SalesforceReferrals ; VERSION= '0.0.1'
         @form_errors << "We found a dupicate entry in our database. We cannot add them at this time. Please inform your program advisor with the correct information."
       else
         # error!
-        @form_errors << "<strong>Failed</strong>"
+        @form_errors << "<strong>Failed: #{results['status']}</strong>"
         @form_errors << results['description'] if results['description']
         @form_errors << results['exception'] if results['exception']
         
