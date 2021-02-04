@@ -1,4 +1,4 @@
-class SalesforceReferrals ; VERSION= '0.0.1'
+class SalesforceReferrals
 
   EMAIL_REGEX = /^([\w\.%\+\-]+)@([\w\-]+\.)+([\w]{2,})$/i
 
