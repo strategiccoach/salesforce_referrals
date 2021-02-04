@@ -9,13 +9,17 @@ class SalesforceReferrals ; VERSION= '0.0.1'
     @form_vars = form_vars
     @form_errors = []
     # validate information. 
-    if !EMAIL_REGEX.match(@form_vars['client_email'])
+    if @form_vars['parent_id'].blank? && !EMAIL_REGEX.match(@form_vars['client_email'])
       @status_code = 600
-      @form_errors << "Please ensure your email is correct... #{@form_vars['client_email']}"
+      @form_errors << "Please ensure your email is correct."
     end
-    if !EMAIL_REGEX.match(@form_vars['referral_email'])
+    if not @form_vars['referral_email'].present? && @form_vars['referral_phone'].present?
       @status_code = 600
-      @form_errors << "Please ensure your referral's email is correct./. #{@form_vars['referral_email']}"
+      @form_errors << "Please provide your referral's email or phone number."
+    end
+    if @form_vars['referral_email'].present? && !EMAIL_REGEX.match(@form_vars['referral_email'])
+      @status_code = 600
+      @form_errors << "Please ensure your referral's email is correct."
     end
   end
 
