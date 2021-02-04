@@ -21,6 +21,12 @@ class SalesforceReferrals ; VERSION= '0.0.1'
       @status_code = 600
       @form_errors << "Please ensure your referral's email is correct."
     end
+    if not ENV['SERVICE_IDENTIFIER'].eql?('referral_client')
+      if @form_vars['referral_is_entrepreneur'].blank?
+        @status_code = 600
+        @form_errors << "Please let us know if your referral is an entrepreneur."
+      end
+    end
   end
 
   def perform(status = 1)
