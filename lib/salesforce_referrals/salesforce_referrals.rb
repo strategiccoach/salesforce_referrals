@@ -55,7 +55,7 @@ class SalesforceReferrals
     end
     if results['success'] == false
       @status_code = 600
-      @form_errors << "Request timed out. Please try again."
+      @form_errors << "Request timed out. Please try again." if @form_errors.blank?
     end
   end
 
