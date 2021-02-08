@@ -85,6 +85,7 @@ class SalesforceReferrals
     @form_errors = []
 
     if results['status'].blank?
+      @status_code = 500
       @form_errors << "FATAL Exception"
       @form_errors << "There was an unrecoverable error."
       @form_errors << results['description']
@@ -92,21 +93,34 @@ class SalesforceReferrals
     elsif results['status'].present? && results['status'].eql?('100')
       @status_code = 200
     else
+      @status_code = 300
       case results['status']
-      when '200'
-        @form_errors << "Results returned from Salesforce: #{results['status']}"
-        @form_errors << "<strong>Failed: #{results['status']}</strong>"
-        @form_errors << results['description']
-      when "325"
-        @form_errors << "We found a dupicate entry in our database. We cannot add them at this time. Please inform your program advisor with the correct information."
+      # when '200'
+      #   @form_errors << "Results returned from Salesforce: #{results['status']}"
+      #   @form_errors << "<strong>Failed: #{results['status']}</strong>"
+      #   @form_errors << results['description']
+      when '310'
+        @form_errors << 'Please provide a First Name'
+      when '311'
+        @form_errors << 'Please provide a Last Name'
+      when '312'
+        @form_errors << 'Please provide an Email address'
+      when '313'
+        @form_errors << 'Please provide either Email or Phone'
       else
+        @status_code = 500
         # error!
         @form_errors << "<strong>Failed: #{results['status']}</strong>"
         @form_errors << results['description'] if results['description']
         @form_errors << results['exception'] if results['exception']
-        
       end
     end
+
+    if ENV['DEBUG'].to_i == 1
+      @form_errors.unshift "<strong>DEBUGGING ENABLED</strong>"
+      send_error_report(data)
+    end
+
     if @status_code.eql?(200) && ENV['SEND_REFERRAL_EMAIL'].to_i.eql?(1)
       SalesforceReferralsMailer.submission(@form_vars).deliver_now
     elsif not @status_code.eql?(200)
@@ -137,4 +151,38 @@ class SalesforceReferrals
     JSON.parse(response.body)
   end
 
+end
+
+=begin
+  300 => 'Source is not provided'
+301 => 'Source provided is not valid'
+302 => 'Please provide your Id or Email'
+303 => 'Your Contact Id is not valid'
+305 => 'The Contact Id you have provided is not valid'
+310 => 'Please provide a First Name'
+311 => 'Please provide a Last Name'
+313 => 'Please provide either Email or Phone'
+
+I also adjusted the error text on some to be a little more front-stage friendly, if you choose to expose them to the end-user. This is the full set of error codes/descriptions. There might be a couple new ones to account for - I don't know if you just look for anything that starts with "3" or if you look for the specific codes.
+'300' => 'Source is not provided'
+'301' => 'Source provided is not valid'
+'302' => 'Please provide your Id or Email'
+'303' => 'Your Contact Id is not valid'
+'304' => 'We could not find a record of you in our system'
+'305' => 'The Contact Id you have provided is not valid'
+'306' => 'Your ACL record does not exist'
+'320' => 'Error occurred while updating contact/lead'
+'321' => 'Error occurred while inserting contact/lead'
+'322' => 'Error occurred while querying for the contact'
+'323' => 'Error occurred while querying for the lead'
+'324' => 'Error occurred while inserting the relationship'
+'325' => 'Existing record found as a lead, not contact'
+'326' => 'Error occurred while inserting the referral'
+'327' => 'Error occurred while inserting the task'
+'328' => 'Error occurred while inserting the ACL'
+'350' => 'An unhandled exception has occurred'
+
+=end
+rescue => exception
+  
 end
