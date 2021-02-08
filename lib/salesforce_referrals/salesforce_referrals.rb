@@ -4,7 +4,7 @@ class SalesforceReferrals
 
   attr_reader :form_errors, :form_vars, :status_code, :mailer
 
-  def initialize(form_vars)
+  def initialize(form_vars, captcha = nil)
     @status_code = 200
     @form_vars = form_vars
     @form_errors = []
@@ -30,6 +30,27 @@ class SalesforceReferrals
         @status_code = 600
         @form_errors << "Please let us know if your referral is an entrepreneur."
       end
+    end
+    perform_google_check(captcha) if captcha.present?
+  end
+
+  def perform_google_check(captcha)
+    if ENV['GCAPTCHA_SECRET'].present?
+      # https://www.google.com/recaptcha/api/siteverify
+      # uri = URI.parse(ENV['GCAPTCHA_URL'])
+      uri = URI.parse('https://www.google.com/recaptcha/api/siteverify')
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true
+      data = {
+        secret: ENV['GCAPTCHA_SECRET'],
+        response: captcha
+      }
+      request = Net::HTTP::Post.new(uri.request_uri)
+      request.body = data.to_json
+      response = http.request(request)
+      results = JSON.parse(response.body) rescue {}
+
+      Rails.logger.info ">> CAPTCHA: #{results}"
     end
   end
 
