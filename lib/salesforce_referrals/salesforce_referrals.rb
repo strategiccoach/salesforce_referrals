@@ -74,6 +74,7 @@ class SalesforceReferrals
     end
 
     is_ent = @form_vars['referral_is_entrepreneur'].eql?(true) ? "Yes" : "No"
+    @form_errors = []
 
     data = {
       source: ENV['SERVICE_IDENTIFIER'],
@@ -94,21 +95,22 @@ class SalesforceReferrals
       }
     }
     # Alpha may change with refreshes. use instance url
-    api_url = "#{auth_params['instance_url']}/services/apexrest/NewContact"
-    uri = URI.parse(api_url)
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true
+    begin
+      api_url = "#{auth_params['instance_url']}/services/apexrest/NewContact"
+      uri = URI.parse(api_url)
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true
     
-    request = Net::HTTP::Post.new(uri.request_uri)
-    request['Authorization'] = "Bearer #{auth_params["access_token"]}"
-    # use json
-    request['Content-Type'] = "application/json"
-    request.body = data.to_json
+      request = Net::HTTP::Post.new(uri.request_uri)
+      request['Authorization'] = "Bearer #{auth_params["access_token"]}"
+      # use json
+      request['Content-Type'] = "application/json"
+      request.body = data.to_json
     
-    response = http.request(request)
-    results = JSON.parse(response.body) rescue {}
-
-    @form_errors = []
+      response = http.request(request)
+      results = JSON.parse(response.body) rescue {}
+    rescue
+    end
 
     if results['status'].blank?
       @status_code = 500
