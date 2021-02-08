@@ -183,6 +183,3 @@ I also adjusted the error text on some to be a little more front-stage friendly,
 '350' => 'An unhandled exception has occurred'
 
 =end
-rescue => exception
-  
-end
