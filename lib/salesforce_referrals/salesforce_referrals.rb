@@ -30,36 +30,32 @@ class SalesforceReferrals
         @status_code = 600
         @form_errors << "Please let us know if your referral is an entrepreneur."
       end
+      perform_google_check(captcha)
     end
-    Rails.logger.info "!! #{captcha}"
-    perform_google_check(captcha) if captcha.present?
   end
 
   def perform_google_check(captcha)
-    if ENV['GCAPTCHA_SECRET'].present?
+    # https://www.google.com/recaptcha/api/siteverify
+    data = [
+      [ "secret", ENV['GCAPTCHA_SECRET']] ,
+      [ "response", captcha ]
+    ]
+    uri = URI.parse(ENV['GCAPTCHA_URL'])
+    form = URI.encode_www_form(data)
+    headers = { content_type: "application/x-www-form-urlencoded" }
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
+    response = http.request_post(uri.path, form, headers)
+    # request = Net::HTTP::Post.new(uri.request_uri)
+    # response = http.request(request)
+    results = JSON.parse(response.body) rescue {}
 
-      # https://www.google.com/recaptcha/api/siteverify
-      data = [
-        [ "secret", ENV['GCAPTCHA_SECRET']] ,
-        [ "response", captcha ]
-      ]
-      uri = URI.parse(ENV['GCAPTCHA_URL'])
-      form = URI.encode_www_form(data)
-      headers = { content_type: "application/x-www-form-urlencoded" }
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true
-      response = http.request_post(uri.path, form, headers)
-      # request = Net::HTTP::Post.new(uri.request_uri)
-      # response = http.request(request)
-      results = JSON.parse(response.body) rescue {}
-
-      if ENV['DEBUG'].to_i == 1
-        Rails.logger.info ">> CAPTCHA: #{results}"
-      end
-      if results['success'] == false
-        @status_code = 600
-        @form_errors << "Request timed out. Please try again."
-      end
+    if ENV['DEBUG'].to_i == 1
+      Rails.logger.info ">> CAPTCHA: #{results}"
+    end
+    if results['success'] == false
+      @status_code = 600
+      @form_errors << "Request timed out. Please try again."
     end
   end
 
