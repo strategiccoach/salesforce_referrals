@@ -117,6 +117,7 @@ class SalesforceReferrals
     end
 
     if ENV['DEBUG'].to_i == 1
+      @form_errors.unshift "Salesforce Returned: #{results['status']}"
       @form_errors.unshift "<strong>DEBUGGING ENABLED</strong>"
       send_error_report(data)
     end
