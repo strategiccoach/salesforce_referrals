@@ -16,7 +16,7 @@
             <span class="preheader">
               <%= yield :preheader_text %>
             </span>
-            <table class="main">
+            <table class="main"><tr><td>
               <!-- START MAIN CONTENT AREA -->
               <h1>Error Notification</h1>
               <%= @error.join("<br />").html_safe %>
@@ -27,9 +27,17 @@
               <% end -%>
               <h5>Sent to Salesforce</h5>
               <br /><br />
-              <%= @data %>
+              <% @data.each do |var| %>
+                <% if var[1].is_a?(Array) || var[1].is_a?(Hash) %>
+                  <% var[1].each do |vvar| %>
+                    <%= "#{vvar[0]}: #{vvar[1]}" %><br />
+                  <% end -%>
+                <% else -%>
+                  <%= "#{var[0]}: #{var[1]}" %><br />
+                <% end -%>
+              <% end -%>
               <!-- END MAIN CONTENT AREA -->
-              </table>
+            </td></tr></table>
 <!-- END CENTERED WHITE CONTAINER --></div>
         </td>
         <td>&nbsp;</td>
