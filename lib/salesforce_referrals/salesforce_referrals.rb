@@ -110,6 +110,7 @@ class SalesforceReferrals
       response = http.request(request)
       results = JSON.parse(response.body) rescue {}
     rescue
+      results = {}
     end
 
     if results['status'].blank?
