@@ -30,7 +30,7 @@ class SalesforceReferrals
         @status_code = 600
         @form_errors << "Please let us know if your referral is an entrepreneur."
       end
-      perform_google_check(captcha)
+      perform_google_check(captcha) unless captcha.blank?
     end
   end
 
@@ -53,7 +53,7 @@ class SalesforceReferrals
     if ENV['DEBUG'].to_i == 1
       Rails.logger.info ">> CAPTCHA: #{results}"
     end
-    if results['success'] == false
+    if results['success'] == false && !(results["error-codes"] == "timeout-or-duplicate")
       @status_code = 600
       @form_errors << "Request timed out. Please try again." if @form_errors.blank?
     end
