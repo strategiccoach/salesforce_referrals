@@ -73,7 +73,7 @@ class SalesforceReferrals
       return false
     end
 
-    is_ent = @form_vars['referral_is_entrepreneur'].eql?(true) ? "Yes" : "No"
+    is_ent = (@form_vars['referral_is_entrepreneur'].eql?(true) || @form_vars['referral_is_entrepreneur'].eql?("Yes")) ? "Yes" : "No"
     @form_errors = []
 
     data = {
@@ -87,7 +87,7 @@ class SalesforceReferrals
         last_name: @form_vars['referral_last_name'],
         phone: @form_vars['referral_phone'],
         email: @form_vars['referral_email'].to_s.downcase,
-        company: @form_vars['referral_company'],
+        business_name: @form_vars['referral_company'],
         relationship: @form_vars['referral_relationship'],
         entrepreneur: is_ent,
         kp: @form_vars['referral_kp_title'],
