@@ -13,13 +13,23 @@ class SalesforceReferrals
       @status_code = 600
       @form_errors << "Please ensure your email is correct."
     end
-    if @form_vars['referral_email'].blank? && @form_vars['referral_phone'].blank?
-      @status_code = 600
-      @form_errors << "Please provide your referral's email or phone number."
+    if ENV['ONLY_REQUIRE_ONE'].to_i.eql?(1)
+      if @form_vars['referral_email'].blank? && @form_vars['referral_phone'].blank?
+        @status_code = 600
+        @form_errors << "Please provide your referral's email or phone number."
+      end
+    else
+      if @form_vars['referral_email'].blank? || @form_vars['referral_phone'].blank?
+        @status_code = 600
+        @form_errors << "Please provide your referral's email and phone number."
+      end
     end
-    if @form_vars['referral_first_name'].blank? || @form_vars['referral_last_name'].blank?
+    names = []
+    names << "First name" if @form_vars['referral_first_name'].blank?
+    names << "Last name" if @form_vars['referral_last_name'].blank?
+    if names.count > 0
       @status_code = 600
-      @form_errors << "Please provide your referral's full name."
+      @form_errors << "Please provide your referral's #{names.join(" and ")} name."
     end
     if !@form_vars['referral_email'].blank? && !EMAIL_REGEX.match(@form_vars['referral_email'])
       @status_code = 600
