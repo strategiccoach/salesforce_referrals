@@ -162,6 +162,7 @@ class SalesforceReferrals
     end
 
     if @status_code.eql?(200) && ENV['SEND_REFERRAL_EMAIL'].to_i.eql?(1)
+      @form_vars['referral_relationship'] = is_ent
       SalesforceReferralsMailer.submission(@form_vars).deliver_now
     elsif not @status_code.eql?(200)
       send_error_report(data)

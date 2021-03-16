@@ -6,7 +6,7 @@ Last Name: <%= @referral['referral_last_name'] %><br />
         Email Address: <%= @referral['referral_phone'] %><br />
         Phone Number: <%= @referral['referral_email'] %><br />
         Company: <%= @referral['referral_company'] %><br />
-        Is an entrepreneur: <%= @referral['referral_is_entrepreneur'].eql?(true) ? "Yes" : "No" %><br />
+        Is an entrepreneur: <%= (@referral['referral_is_entrepreneur'].eql?(true) || @referral['referral_is_entrepreneur'].eql?("Yes") ) ? "Yes" : "No" %><br />
         <% if @referral['referral_relationship'].present? %>
           Relationship: <%= @referral['referral_relationship'] %><br />
         <% end -%>
