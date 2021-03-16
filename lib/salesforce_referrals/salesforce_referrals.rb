@@ -162,7 +162,6 @@ class SalesforceReferrals
     end
 
     if @status_code.eql?(200) && ENV['SEND_REFERRAL_EMAIL'].to_i.eql?(1)
-      @form_vars['referral_relationship'] = is_ent
       SalesforceReferralsMailer.submission(@form_vars).deliver_now
     elsif not @status_code.eql?(200)
       send_error_report(data)
@@ -195,7 +194,7 @@ class SalesforceReferrals
 end
 
 =begin
-  300 => 'Source is not provided'
+300 => 'Source is not provided'
 301 => 'Source provided is not valid'
 302 => 'Please provide your Id or Email'
 303 => 'Your Contact Id is not valid'
