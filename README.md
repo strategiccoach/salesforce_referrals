@@ -6,12 +6,14 @@ Requires that the mail connector is configured.
 
 Requires the following parameters to be configured as environmental variables. Speak to your Salesforce admin to be provided this values. Do not store the actual parameters in the code. Refer to them via the ENV.
 
+```
 OAUTH_CLIENT_ID
 OAUTH_CLIENT_SECRET
 SF_HOST
 SF_USER
 SF_PASS
 SERVICE_IDENTIFIER
+```
 
 Copy the views from lib/salesforce_referral_mailer to app/vews
 
