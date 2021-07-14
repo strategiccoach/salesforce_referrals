@@ -23,10 +23,23 @@ Switch the processing of user data to SalesforceReferral.new(params)
 
 For the referrer
 
-client_name, client_email, parent_id (the salesforce id)
+```
+client_name
+client_email
+parent_id (the salesforce id)
+```
 
 For the referral
 
-referral_first_name, referral_last_name, referral_phone, referral_email, referral_is_entrepreneur (as true / false), referral_company, referral_kp_title, description
+```
+referral_first_name
+referral_last_name
+referral_phone
+referral_email
+referral_is_entrepreneur (as true / false)
+referral_company
+referral_kp_title
+description
+```
 
 The process will transform them to the format / parameters expected by the webservice
