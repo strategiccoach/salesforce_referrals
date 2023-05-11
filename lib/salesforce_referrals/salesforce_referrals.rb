@@ -86,8 +86,9 @@ class SalesforceReferrals
     is_ent = (@form_vars['referral_is_entrepreneur'].eql?(true) || @form_vars['referral_is_entrepreneur'].eql?("Yes")) ? "Yes" : "No"
     @form_errors = []
 
+    service_id = @form_vars['source'].blank? ? ENV['SERVICE_IDENTIFIER'] : @form_vars['source']
     data = {
-      source: ENV['SERVICE_IDENTIFIER'],
+      source: service_id,
       parent_id: @form_vars['parent_id'],
       form_data: {
         # referrer
