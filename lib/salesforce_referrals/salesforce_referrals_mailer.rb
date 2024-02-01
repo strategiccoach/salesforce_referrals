@@ -5,9 +5,10 @@ if defined?(ActionMailer)
   
     def submission(referral)
       @referral = referral
+      key = referral['source'].present? ? referral['source'] : ENV['SERVICE_IDENTIFIER'].to_s
       source = { "referral_sharecoach": "Share Coach", 
         "referral_introductions": "Introductions", 
-        "referral_client": "Client Site"}[ENV['SERVICE_IDENTIFIER'].to_sym]
+        "referral_client": "Client Site"}[key.to_sym]
       mail(to: "referrals@strategiccoach.com", subject: "Referral Submission from #{source}",from: "clientsite@strategiccoach.com")
     end
     
