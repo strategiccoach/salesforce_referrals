@@ -17,7 +17,7 @@ SERVICE_IDENTIFIER
 
 Copy the views from lib/salesforce_referral_mailer to app/vews
 
-Switch the processing of user data to SalesforceReferral.new(params)
+Switch the processing of user data to SalesforceReferrals.new(params)
 
 ## Website referral form
 
