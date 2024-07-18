@@ -163,14 +163,28 @@ class SalesforceReferrals
     end
 
     if @status_code.eql?(200) && ENV['SEND_REFERRAL_EMAIL'].to_i.eql?(1)
-      SalesforceReferralsMailer.submission(@form_vars).deliver_now
+      begin
+        SalesforceReferralsMailer.submission(@form_vars).deliver_now
+      rescue
+        Rails.logger.info "Error sending submission!!!!"
+        Rails.logger.info "******************************"
+        Rails.logger.info @form_vars.inspect
+        Rails.logger.info "******************************"
+      end
     elsif not @status_code.eql?(200)
       send_error_report(data)
     end
   end
 
   def send_error_report(data = {})
-    SalesforceReferralsMailer.errors(@form_errors, @form_vars, data).deliver_now
+    begin
+      SalesforceReferralsMailer.errors(@form_errors, @form_vars, data).deliver_now
+    rescue
+      Rails.logger.info "Error sending error report!!!!"
+      Rails.logger.info "******************************"
+      Rails.logger.info @form_errors.inspect
+      Rails.logger.info "******************************"
+    end
   end
 
   # login to salesforce using OAuth2
