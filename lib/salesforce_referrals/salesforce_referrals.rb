@@ -165,10 +165,11 @@ class SalesforceReferrals
     if @status_code.eql?(200) && ENV['SEND_REFERRAL_EMAIL'].to_i.eql?(1)
       begin
         SalesforceReferralsMailer.submission(@form_vars).deliver_now
-      rescue
+      rescue => e
         Rails.logger.info "Error sending submission!!!!"
         Rails.logger.info "******************************"
         Rails.logger.info @form_vars.inspect
+        Rails.logger.info "Errors: #{e}"
         Rails.logger.info "******************************"
       end
     elsif not @status_code.eql?(200)
