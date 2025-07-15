@@ -100,6 +100,7 @@ class SalesforceReferrals
         email: @form_vars['referral_email'].to_s.downcase,
         business_name: @form_vars['referral_company'],
         relationship: @form_vars['referral_relationship'],
+        country: @form_vars['referral_country'],
         entrepreneur: is_ent,
         kp: @form_vars['referral_kp_title'],
         description: @form_vars['description']
