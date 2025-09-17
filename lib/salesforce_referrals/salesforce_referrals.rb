@@ -8,7 +8,7 @@ class SalesforceReferrals
     @status_code = 200
     @form_vars = form_vars
     @form_errors = []
-    # validate information. 
+    # validate information.
     if @form_vars['parent_id'].blank? && !EMAIL_REGEX.match(@form_vars['client_email'])
       @status_code = 600
       @form_errors << "Please ensure your email is correct."
@@ -106,19 +106,23 @@ class SalesforceReferrals
         description: @form_vars['description']
       }
     }
+    if Rails && Rails.logger
+      Rails.logger.info "***********\nForm Data: #{data}"
+      Rails.logger.info "***********\nForm Data: #{data.to_json}"
+    end
     # Alpha may change with refreshes. use instance url
     begin
       api_url = "#{auth_params['instance_url']}/services/apexrest/NewContact"
       uri = URI.parse(api_url)
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
-    
+
       request = Net::HTTP::Post.new(uri.request_uri)
       request['Authorization'] = "Bearer #{auth_params["access_token"]}"
       # use json
       request['Content-Type'] = "application/json"
       request.body = data.to_json
-    
+
       response = http.request(request)
       results = JSON.parse(response.body) rescue {}
     rescue
