@@ -201,11 +201,9 @@ class SalesforceReferrals
     http.use_ssl = true
     request = Net::HTTP::Post.new(uri.request_uri)
     request.set_form_data({
-      "grant_type": "password",
+      "grant_type": "client_credentials",
       "client_id": ENV['OAUTH_CLIENT_ID'],
-      "client_secret": ENV['OAUTH_CLIENT_SECRET'],
-      "username": ENV['SF_USER'],
-      "password": ENV['SF_PASS']
+      "client_secret": ENV['OAUTH_CLIENT_SECRET']
     })
 
     response = http.request(request)
