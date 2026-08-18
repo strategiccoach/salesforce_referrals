@@ -106,7 +106,7 @@ class SalesforceReferrals
         description: @form_vars['description']
       }
     }
-    if Rails && Rails.logger
+    if ENV['DEBUG'].to_i == 1 && Rails && Rails.logger
       Rails.logger.info "***********\nForm Data: #{data}"
       Rails.logger.info "***********\nForm Data: #{data.to_json}"
     end
@@ -171,11 +171,13 @@ class SalesforceReferrals
       begin
         SalesforceReferralsMailer.submission(@form_vars).deliver_now
       rescue => e
-        Rails.logger.info "Error sending submission!!!!"
-        Rails.logger.info "******************************"
-        Rails.logger.info @form_vars.inspect
-        Rails.logger.info "Errors: #{e}"
-        Rails.logger.info "******************************"
+        if ENV['DEBUG'].to_i == 1
+          Rails.logger.info "Error sending submission!!!!"
+          Rails.logger.info "******************************"
+          Rails.logger.info @form_vars.inspect
+          Rails.logger.info "Errors: #{e}"
+          Rails.logger.info "******************************"
+        end
       end
     elsif not @status_code.eql?(200)
       send_error_report(data)
@@ -185,7 +187,7 @@ class SalesforceReferrals
   def send_error_report(data = {})
     begin
       SalesforceReferralsMailer.errors(@form_errors, @form_vars, data).deliver_now
-    rescue
+    rescue Postmark::Error
       Rails.logger.info "Error sending error report!!!!"
       Rails.logger.info "******************************"
       Rails.logger.info @form_errors.inspect
